@@ -1,0 +1,249 @@
+definitions:
+  controllers.PingSwag:
+    properties:
+      health:
+        example: ok
+        type: string
+    type: object
+  request.CreateTodo:
+    properties:
+      description:
+        example: Desc TODO
+        type: string
+      title:
+        example: Title TODO
+        type: string
+    type: object
+  views.CreateTodoFailureSwag:
+    properties:
+      additional_info:
+        additionalProperties:
+          type: string
+        example:
+          error: Title is required
+        type: object
+      error:
+        example: BAD_REQUEST
+        type: string
+      message:
+        example: CREATE TODO FAIL
+        type: string
+      status:
+        example: 400
+        type: integer
+    type: object
+  views.CreateTodoPayload:
+    properties:
+      created_at:
+        type: string
+      description:
+        example: Desc TODO
+        type: string
+      id:
+        example: 1
+        type: integer
+      title:
+        example: Title TODO
+        type: string
+    type: object
+  views.CreateTodoSuccessSwag:
+    properties:
+      message:
+        example: CREATE TODO SUCCESS
+        type: string
+      payload:
+        $ref: '#/definitions/views.CreateTodoPayload'
+      status:
+        example: 201
+        type: integer
+    type: object
+  views.GetTodoPayload:
+    properties:
+      created_at:
+        type: string
+      description:
+        example: Desc TODO
+        type: string
+      id:
+        example: 1
+        type: integer
+      title:
+        example: Title TODO
+        type: string
+    type: object
+  views.GetTodosSuccessSwag:
+    properties:
+      message:
+        example: CREATE TODO SUCCESS
+        type: string
+      payload:
+        items:
+          $ref: '#/definitions/views.GetTodoPayload'
+        type: array
+      status:
+        example: 200
+        type: integer
+    type: object
+  views.UpdateTodoFailureSwag:
+    properties:
+      additional_info:
+        additionalProperties:
+          type: string
+        example:
+          error: Title is required
+        type: object
+      error:
+        example: BAD_REQUEST
+        type: string
+      message:
+        example: UPDATE TODO FAIL
+        type: string
+      status:
+        example: 400
+        type: integer
+    type: object
+  views.UpdateTodoSuccessSwag:
+    properties:
+      message:
+        example: UPDATE TODO SUCCESS
+        type: string
+      payload:
+        $ref: '#/definitions/views.CreateTodoPayload'
+      status:
+        example: 201
+        type: integer
+    type: object
+info:
+  contact: {}
+paths:
+  /ping:
+    get:
+      consumes:
+      - application/json
+      description: do ping
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controllers.PingSwag'
+      summary: ping example
+      tags:
+      - Health
+  /todos:
+    get:
+      consumes:
+      - application/json
+      description: get all todos
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/views.GetTodosSuccessSwag'
+      summary: Get All TODOS
+      tags:
+      - TODOS
+    post:
+      consumes:
+      - application/json
+      description: create todo
+      parameters:
+      - description: Request Body
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/request.CreateTodo'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/views.CreateTodoSuccessSwag'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/views.CreateTodoFailureSwag'
+      summary: Create TODO
+      tags:
+      - TODOS
+  /todos/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: delete todo
+      parameters:
+      - description: Todo ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/views.UpdateTodoSuccessSwag'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/views.UpdateTodoFailureSwag'
+      summary: Delete TODO
+      tags:
+      - TODOS
+    get:
+      consumes:
+      - application/json
+      description: get all todos
+      parameters:
+      - description: Todo ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/views.GetTodosSuccessSwag'
+      summary: Get All TODOS
+      tags:
+      - TODOS
+    put:
+      consumes:
+      - application/json
+      description: update todo
+      parameters:
+      - description: Todo ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Request Body
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/request.CreateTodo'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/views.UpdateTodoSuccessSwag'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/views.UpdateTodoFailureSwag'
+      summary: Update TODO
+      tags:
+      - TODOS
+swagger: "2.0"
